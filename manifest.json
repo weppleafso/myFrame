@@ -12,12 +12,14 @@
 	],
 	"game": [
 		"bin-debug/entity/Entity.js",
-		"bin-debug/AssetAdapter.js",
+		"bin-debug/ThemeAdapter.js",
 		"bin-debug/Director.js",
 		"bin-debug/LoadingUI.js",
 		"bin-debug/Main.js",
-		"bin-debug/ThemeAdapter.js",
+		"bin-debug/Config.js",
+		"bin-debug/AssetAdapter.js",
 		"bin-debug/entity/EntityContainer.js",
+		"bin-debug/lib/MyTheme.js",
 		"bin-debug/ui/scene.js",
 		"bin-debug/ui/View.js"
 	]

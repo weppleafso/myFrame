@@ -52,7 +52,8 @@ class Main extends eui.UILayer {
         //注入自定义的素材解析器
         let assetAdapter = new AssetAdapter();
         egret.registerImplementation("eui.IAssetAdapter", assetAdapter);
-        egret.registerImplementation("eui.IThemeAdapter", new ThemeAdapter());
+        // egret.registerImplementation("eui.IThemeAdapter", new ThemeAdapter());
+        MyTheme.registerThemeAdapter(this.stage);
         //Config loading process interface
         //设置加载进度界面
         this.loadingView = new LoadingUI();
@@ -70,7 +71,7 @@ class Main extends eui.UILayer {
         RES.removeEventListener(RES.ResourceEvent.CONFIG_COMPLETE, this.onConfigComplete, this);
         // load skin theme configuration file, you can manually modify the file. And replace the default skin.
         //加载皮肤主题配置文件,可以手动修改这个文件。替换默认皮肤。
-        let theme = new eui.Theme("resource/default.thm.json", this.stage);
+        let theme = new MyTheme(config.themeUrl, this.stage);
         theme.addEventListener(eui.UIEvent.COMPLETE, this.onThemeLoadComplete, this);
 
         RES.addEventListener(RES.ResourceEvent.GROUP_COMPLETE, this.onResourceLoadComplete, this);
@@ -142,6 +143,7 @@ class Main extends eui.UILayer {
      * Create scene interface
      */
     protected startCreateScene(): void {
+        MyTheme.hack();
         director.instance.init(this);
     }
     

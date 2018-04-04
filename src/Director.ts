@@ -66,7 +66,7 @@ namespace director {
             this.container.onUpdate();
             this.scene && this.scene.onUpdate();
         }
-        /**切换场景 返回上一个的场景 以便做特殊处理使用*/
+        /**切换场景 返回上一个的场景 以便做频繁切换场景使用*/
         changeScene(scene:cui.Scene):cui.Scene{
             let lastScene = this.scene;
             lastScene.destroy();

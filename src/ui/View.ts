@@ -1,6 +1,6 @@
 // TypeScript file
 namespace cui {
-    export var Z = {
+    export var layer = {
         /**最底层baseView那一层 */
         base:0,
         /**界面层 */
@@ -15,7 +15,7 @@ namespace cui {
         /**皮肤 */
         skin?:string
         /**zorder 默认的zOrder 为界面层*/
-        zOrder?:number
+        layer?:number
         /**点击界面外关闭 默认为false*/
         tabOutSideClose?:boolean
         /**固定界面 意思就是组件 不计算为界面 默认为false*/
@@ -78,8 +78,31 @@ namespace cui {
         public set pause(state:boolean){
             this._pause = state;
         }
-        protected onUpdate(){
+        onUpdate(){
 
+        }
+
+        get layer(){
+            if(this.viewConfig)  return this.viewConfig.layer;
+        }
+
+        get mutex(){
+            if(this.viewConfig)  return this.viewConfig.mutex;
+        }
+
+
+        private _zOrder:number;
+        get zOrder(){
+            return this._zOrder;
+        }
+        set zOrder(z){
+            this._zOrder = z;
+        }
+
+        close(){
+            this.pause = true;
+            this.parent && this.parent.removeChild(this);
+            this.scene = null;
         }
     }
 }

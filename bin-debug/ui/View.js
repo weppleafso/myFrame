@@ -14,7 +14,7 @@ var __extends = (this && this.__extends) || (function () {
 // TypeScript file
 var cui;
 (function (cui) {
-    cui.Z = {
+    cui.layer = {
         /**最底层baseView那一层 */
         base: 0,
         /**界面层 */
@@ -70,6 +70,37 @@ var cui;
             configurable: true
         });
         View.prototype.onUpdate = function () {
+        };
+        Object.defineProperty(View.prototype, "layer", {
+            get: function () {
+                if (this.viewConfig)
+                    return this.viewConfig.layer;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(View.prototype, "mutex", {
+            get: function () {
+                if (this.viewConfig)
+                    return this.viewConfig.mutex;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(View.prototype, "zOrder", {
+            get: function () {
+                return this._zOrder;
+            },
+            set: function (z) {
+                this._zOrder = z;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        View.prototype.close = function () {
+            this.pause = true;
+            this.parent && this.parent.removeChild(this);
+            this.scene = null;
         };
         return View;
     }(eui.Component));

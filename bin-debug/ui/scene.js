@@ -18,28 +18,113 @@ var cui;
         function Scene(baseView) {
             var _this = _super.call(this) || this;
             _this.baseView = baseView;
+            _this.pushView(_this.baseView);
+            _this.mask = new eui.Rect();
+            _this.mask.alpha = 0.6;
+            _this.tailZOrder = 0;
+            _this.viewList = {};
+            _this.viewMutexs = {};
             return _this;
         }
         Scene.prototype.create = function () {
             _super.prototype.create.call(this);
             this.display = new eui.Group();
             director.instance.rootLayer.addChild(this.display);
-            this.display.addChild(this.baseView);
+            this.mask.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onTabOutSideClose, this);
             this.onResize();
         };
         Scene.prototype.destroy = function () {
             _super.prototype.destroy.call(this);
+            this.mask.removeEventListener(egret.TouchEvent.TOUCH_TAP, this.onTabOutSideClose, this);
             this.display.parent && director.instance.rootLayer.removeChild(this.display);
         };
         Scene.prototype.onResize = function () {
-            this.display.width = director.instance.rootLayer.width;
-            this.display.height = director.instance.rootLayer.height;
+            var width = director.instance.rootLayer.width;
+            var height = director.instance.rootLayer.height;
+            this.display.width = width;
+            this.display.height = height;
+            this.mask.width = width;
+            this.mask.height = height;
         };
-        /**不允许在update中push 除非callLater*/
         Scene.prototype.pushView = function (view) {
+            this._addViewList.push(view);
         };
-        /**不允许在update中remove 除非callLater*/
-        Scene.prototype.poView = function (view) {
+        Scene.prototype.popView = function (view) {
+            this._removeViewList.push(view);
+        };
+        Scene.prototype.getLayerViewList = function (layer) {
+            this.viewList[layer] = this.viewList[layer] || [];
+            return this.viewList[layer];
+        };
+        Scene.prototype.onUpdateView = function () {
+            for (var layer_1 in this.viewList) {
+                var viewList = this.viewList[layer_1];
+                for (var i = 0, len = viewList.length; i < len; i++) {
+                    var view = viewList[i];
+                    view.onUpdate();
+                }
+            }
+            for (var i = 0, len = this._removeViewList.length; i < len; i++) {
+                var view = this._removeViewList[i];
+                if (view.mutex) {
+                    if (this.viewMutexs[view.mutex] == view) {
+                        delete this.viewMutexs[view.mutex];
+                    }
+                }
+                var viewList = this.getLayerViewList(view.layer);
+                var index = viewList.indexOf(view);
+                if (index != -1) {
+                    viewList.splice(index, 1);
+                    view.close();
+                }
+            }
+            for (var i = 0, len = this._addViewList.length; i < len; i++) {
+                var view = this._addViewList[i];
+                var viewList = this.getLayerViewList(view.layer);
+                var index = viewList.indexOf(view);
+                if (index == -1) {
+                    viewList.push(view);
+                    view.zOrder = this.tailZOrder++;
+                    view.scene = this;
+                }
+                this.display.addChild(view);
+            }
+            this.display.contains(this.mask) && this.display.removeChild(this.mask);
+            var children = this.display.$children;
+            children.sort(this.compareChildren);
+            var maskIndex = -1;
+            this.maskView = null;
+            for (var len = children.length; len > 0; len--) {
+                var view = children[len - 1];
+                if (view.viewConfig.mask) {
+                    maskIndex = len - 1;
+                    this.maskView = view;
+                }
+            }
+            for (var len = children.length; len > 0; len--) {
+                var view = children[len - 1];
+                if (!view.viewConfig.fixed) {
+                    this.topView = view;
+                }
+            }
+            if (maskIndex > -1) {
+                this.display.addChildAt(this.mask, maskIndex);
+            }
+        };
+        Scene.prototype.onUpdate = function () {
+            this.container.onUpdate();
+            this.onUpdateView();
+        };
+        Scene.prototype.compareChildren = function (a, b) {
+            if (a.layer == b.layer) {
+                return a.zOrder - b.zOrder;
+            }
+            return a.layer - b.layer;
+        };
+        Scene.prototype.onTabOutSideClose = function () {
+            if (this.topView == this.maskView && this.maskView.viewConfig.tabOutSideClose) {
+                this.popView(this.topView);
+            }
         };
         return Scene;
     }(cval.Entity));

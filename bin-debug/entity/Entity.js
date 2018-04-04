@@ -36,6 +36,9 @@ var cval;
             }
             return this._dispatch;
         };
+        Entity.prototype.onUpdate = function () {
+        };
+        ;
         Entity.prototype.byCreate = function (handler) {
             this._byCreate = handler;
         };

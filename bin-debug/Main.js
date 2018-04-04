@@ -62,7 +62,8 @@ var Main = (function (_super) {
         //注入自定义的素材解析器
         var assetAdapter = new AssetAdapter();
         egret.registerImplementation("eui.IAssetAdapter", assetAdapter);
-        egret.registerImplementation("eui.IThemeAdapter", new ThemeAdapter());
+        // egret.registerImplementation("eui.IThemeAdapter", new ThemeAdapter());
+        MyTheme.registerThemeAdapter(this.stage);
         //Config loading process interface
         //设置加载进度界面
         this.loadingView = new LoadingUI();
@@ -80,7 +81,7 @@ var Main = (function (_super) {
         RES.removeEventListener(RES.ResourceEvent.CONFIG_COMPLETE, this.onConfigComplete, this);
         // load skin theme configuration file, you can manually modify the file. And replace the default skin.
         //加载皮肤主题配置文件,可以手动修改这个文件。替换默认皮肤。
-        var theme = new eui.Theme("resource/default.thm.json", this.stage);
+        var theme = new MyTheme(config.themeUrl, this.stage);
         theme.addEventListener(eui.UIEvent.COMPLETE, this.onThemeLoadComplete, this);
         RES.addEventListener(RES.ResourceEvent.GROUP_COMPLETE, this.onResourceLoadComplete, this);
         RES.addEventListener(RES.ResourceEvent.GROUP_LOAD_ERROR, this.onResourceLoadError, this);
@@ -148,6 +149,7 @@ var Main = (function (_super) {
      * Create scene interface
      */
     Main.prototype.startCreateScene = function () {
+        MyTheme.hack();
         director.instance.init(this);
     };
     return Main;
