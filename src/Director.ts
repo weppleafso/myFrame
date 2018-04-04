@@ -69,7 +69,7 @@ namespace director {
         /**切换场景 返回上一个的场景 以便做频繁切换场景使用*/
         changeScene(scene:cui.Scene):cui.Scene{
             let lastScene = this.scene;
-            lastScene.destroy();
+            lastScene && lastScene.destroy();
             this.rootLayer.removeChildren();
             this.scene = scene;
             scene.create();

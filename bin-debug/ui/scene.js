@@ -18,25 +18,25 @@ var cui;
         function Scene(baseView) {
             var _this = _super.call(this) || this;
             _this.baseView = baseView;
-            _this.pushView(_this.baseView);
             _this.mask = new eui.Rect();
             _this.mask.alpha = 0.6;
             _this.tailZOrder = 0;
             _this.viewList = {};
             _this.viewMutexs = {};
+            _this.display = new eui.Group();
+            _this._addViewList = [];
+            _this._removeViewList = [];
+            _this.pushView(_this.baseView);
+            _this.container = new cval.EntityContainer();
             return _this;
         }
-        Scene.prototype.create = function () {
-            _super.prototype.create.call(this);
-            this.display = new eui.Group();
-            director.instance.rootLayer.addChild(this.display);
+        Scene.prototype.onCreate = function () {
             this.mask.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onTabOutSideClose, this);
             this.onResize();
         };
-        Scene.prototype.destroy = function () {
+        Scene.prototype.onDestroy = function () {
             _super.prototype.destroy.call(this);
             this.mask.removeEventListener(egret.TouchEvent.TOUCH_TAP, this.onTabOutSideClose, this);
-            this.display.parent && director.instance.rootLayer.removeChild(this.display);
         };
         Scene.prototype.onResize = function () {
             var width = director.instance.rootLayer.width;
@@ -78,6 +78,7 @@ var cui;
                     view.close();
                 }
             }
+            this._removeViewList.length = 0;
             for (var i = 0, len = this._addViewList.length; i < len; i++) {
                 var view = this._addViewList[i];
                 var viewList = this.getLayerViewList(view.layer);
@@ -89,6 +90,7 @@ var cui;
                 }
                 this.display.addChild(view);
             }
+            this._addViewList.length = 0;
             this.display.contains(this.mask) && this.display.removeChild(this.mask);
             var children = this.display.$children;
             children.sort(this.compareChildren);

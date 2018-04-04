@@ -38,7 +38,7 @@ namespace cui {
             this._byDestroy = [];
             this.setViewConfig(config);
             this.addEventListener(egret.Event.ADDED_TO_STAGE,this._onCreate,this);
-            this.addEventListener(egret.Event.REMOVED_FROM_STAGE,this._onRemove,this);
+            this.addEventListener(egret.Event.REMOVED_FROM_STAGE,this._onDestroy,this);
             this.horizontalCenter = 0;
             this.verticalCenter = 0;
         }
@@ -61,14 +61,14 @@ namespace cui {
         protected abstract onCreate();
 
         /**移除部分 */
-        _onRemove(){
-            this.onRemove();
+        _onDestroy(){
+            this.onDestroy();
             for(let i = 0,len = this._byDestroy.length;i<len;i++){
                 this._byDestroy[i]();
             }
             this._byDestroy.length = 0;
         }
-        protected abstract onRemove();
+        protected abstract onDestroy();
 
         /**界面动态逻辑部分 */
         private _pause:boolean;

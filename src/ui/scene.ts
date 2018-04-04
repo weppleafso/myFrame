@@ -1,5 +1,5 @@
 namespace cui {
-    export abstract class Scene extends cval.Entity {
+    export class Scene extends cval.Entity {
         baseView: View;
         viewMutexs: { [viewMutex: string]: View };
         viewList: { [layer: number]: View[] };
@@ -20,21 +20,26 @@ namespace cui {
         constructor(baseView) {
             super();
             this.baseView = baseView;
-            this.pushView(this.baseView);
+            
             this.mask = new eui.Rect();
             this.mask.alpha = 0.6;
             this.tailZOrder = 0;
             this.viewList = {};
             this.viewMutexs = {};
             this.display = new eui.Group();
+            this._addViewList = [];
+            this._removeViewList = [];
+
+            this.pushView(this.baseView);
+
+            this.container = new cval.EntityContainer();
             
         }
-        create() {
-            super.create();
+        onCreate(){
             this.mask.addEventListener(egret.TouchEvent.TOUCH_TAP,this.onTabOutSideClose,this);
             this.onResize();
         }
-        destroy() {
+        onDestroy(){
             super.destroy();
             this.mask.removeEventListener(egret.TouchEvent.TOUCH_TAP,this.onTabOutSideClose,this);
         }
@@ -82,6 +87,7 @@ namespace cui {
                     view.close();
                 }
             }
+            this._removeViewList.length = 0;
             for (let i = 0, len = this._addViewList.length; i < len; i++) {
                 let view = this._addViewList[i];
                 let viewList = this.getLayerViewList(view.layer);
@@ -93,6 +99,7 @@ namespace cui {
                 }
                 this.display.addChild(view);
             }
+            this._addViewList.length = 0;
             this.display.contains(this.mask) && this.display.removeChild(this.mask);
             let children = this.display.$children;
             children.sort(this.compareChildren);

@@ -151,6 +151,7 @@ var Main = (function (_super) {
     Main.prototype.startCreateScene = function () {
         MyTheme.hack();
         director.instance.init(this);
+        director.instance.changeScene(new cui.Scene(new ctest.MyTestView()));
     };
     return Main;
 }(eui.UILayer));

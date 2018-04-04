@@ -145,6 +145,7 @@ class Main extends eui.UILayer {
     protected startCreateScene(): void {
         MyTheme.hack();
         director.instance.init(this);
+        director.instance.changeScene(new cui.Scene(new ctest.MyTestView()));
     }
     
 }

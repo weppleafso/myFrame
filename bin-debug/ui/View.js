@@ -30,7 +30,7 @@ var cui;
             _this._byDestroy = [];
             _this.setViewConfig(config);
             _this.addEventListener(egret.Event.ADDED_TO_STAGE, _this._onCreate, _this);
-            _this.addEventListener(egret.Event.REMOVED_FROM_STAGE, _this._onRemove, _this);
+            _this.addEventListener(egret.Event.REMOVED_FROM_STAGE, _this._onDestroy, _this);
             _this.horizontalCenter = 0;
             _this.verticalCenter = 0;
             return _this;
@@ -52,8 +52,8 @@ var cui;
             this._byCreate.push(createFunc);
         };
         /**移除部分 */
-        View.prototype._onRemove = function () {
-            this.onRemove();
+        View.prototype._onDestroy = function () {
+            this.onDestroy();
             for (var i = 0, len = this._byDestroy.length; i < len; i++) {
                 this._byDestroy[i]();
             }
