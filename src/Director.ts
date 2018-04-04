@@ -11,6 +11,9 @@ namespace director {
 
         tickMs: number;
         lastTick:number;
+
+        width:number;
+        height:number;
         constructor() {
 
         }
@@ -48,6 +51,8 @@ namespace director {
             this.floatLayer.height = this._stage.height;
             this.topLayer.width = this._stage.width;
             this.topLayer.height = this._stage.height;
+
+            this.scene && this.scene.onResize();
         }
         dispose() {
             if (this.scene) {

@@ -17,11 +17,11 @@
 		"bin-debug/LoadingUI.js",
 		"bin-debug/Main.js",
 		"bin-debug/ThemeAdapter.js",
-		"bin-debug/Config.js",
+		"bin-debug/AssetAdapter.js",
 		"bin-debug/entity/EntityContainer.js",
 		"bin-debug/lib/MyTheme.js",
 		"bin-debug/test/MyTestView.js",
 		"bin-debug/ui/scene.js",
-		"bin-debug/AssetAdapter.js"
+		"bin-debug/Config.js"
 	]
 }
