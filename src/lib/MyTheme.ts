@@ -1,9 +1,3 @@
-// TypeScript file
-/**
- *
- * @author wyb
- *
- */
 class MyTheme extends eui.Theme {
     public static registerThemeAdapter(stage: egret.Stage) {
         var adpater = new ThemeAdapter();
