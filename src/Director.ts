@@ -70,8 +70,10 @@ namespace director {
         changeScene(scene:cui.Scene):cui.Scene{
             let lastScene = this.scene;
             lastScene.destroy();
+            this.rootLayer.removeChildren();
             this.scene = scene;
             scene.create();
+            this.rootLayer.addChild(scene.display);
             return lastScene;
         }
     }

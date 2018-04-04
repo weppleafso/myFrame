@@ -26,18 +26,17 @@ namespace cui {
             this.tailZOrder = 0;
             this.viewList = {};
             this.viewMutexs = {};
+            this.display = new eui.Group();
+            
         }
         create() {
             super.create();
-            this.display = new eui.Group();
-            director.instance.rootLayer.addChild(this.display);
             this.mask.addEventListener(egret.TouchEvent.TOUCH_TAP,this.onTabOutSideClose,this);
             this.onResize();
         }
         destroy() {
             super.destroy();
             this.mask.removeEventListener(egret.TouchEvent.TOUCH_TAP,this.onTabOutSideClose,this);
-            this.display.parent && director.instance.rootLayer.removeChild(this.display);
         }
         onResize() {
             let width = director.instance.rootLayer.width;
