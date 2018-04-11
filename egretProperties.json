@@ -43,6 +43,9 @@
     {
       "name": "promise",
       "path": "./promise"
+    },
+    {
+      "name":"dragonBones"
     }
   ]
 }

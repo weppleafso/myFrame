@@ -10,10 +10,11 @@ namespace director {
         _stage: egret.Stage;
 
         tickMs: number;
-        lastTick:number;
+        tickSec: number;
+        lastTick: number;
 
-        width:number;
-        height:number;
+        _uiScale: number;
+        _uiFitDesign: number;
         constructor() {
 
         }
@@ -21,6 +22,10 @@ namespace director {
             this.dispose();
             this._root = root;
             this._stage = root.stage;
+
+            this._stage.orientation = config.orientation;
+            this._stage.scaleMode = config.scaleMode;
+
             this._stage.addEventListener(egret.Event.RESIZE, this._onResize, this);
             this.container = new cval.EntityContainer();
             this.rootLayer = new egret.DisplayObjectContainer();
@@ -35,22 +40,38 @@ namespace director {
 
             this.lastTick = egret.getTimer();
 
-            this._stage.addEventListener(egret.Event.ENTER_FRAME,this.onTick,this);
+            this._stage.addEventListener(egret.Event.ENTER_FRAME, this.onTick, this);
         }
         private onTick() {
             let nowDt = egret.getTimer()
-            let dt =  nowDt - this.lastTick;
+            let dt = nowDt - this.lastTick;
             this.lastTick = nowDt;
             this.tickMs = Math.min(dt, 100);
+            this.tickSec = this.tickMs / 1000;
+
+
             this.onUpdate();
         }
         private _onResize() {
-            this.rootLayer.width = this._stage.width;
-            this.rootLayer.height = this._stage.height;
-            this.floatLayer.width = this._stage.width;
-            this.floatLayer.height = this._stage.height;
-            this.topLayer.width = this._stage.width;
-            this.topLayer.height = this._stage.height;
+            let contentHeight = config.GAME_CONTENT_HEIGHT;
+            let contentWidth = config.GAME_CONTENT_WIDTH;
+            let realHeight = this._stage.stageHeight;
+            if (realHeight < contentHeight) {
+                this._uiScale = realHeight / contentHeight;
+            }
+            else {
+                this._uiScale = 1;
+            }
+            // init fit design
+            let designWidthScale = 1;
+            let designHeightScale = 1;
+            this._uiFitDesign = Math.min(designWidthScale, designHeightScale);
+            this.rootLayer.width = this.width;
+            this.rootLayer.height = this.height;
+            this.floatLayer.width = this.width;
+            this.floatLayer.height = this.height;
+            this.topLayer.width = this.width;
+            this.topLayer.height = this.height;
 
             this.scene && this.scene.onResize();
         }
@@ -63,16 +84,17 @@ namespace director {
                 this.container.removeAllEntity();
             }
             this.container = null;
-            if(this._stage)
-                this._stage.removeEventListener(egret.Event.ENTER_FRAME,this.onTick,this);
+            if (this._stage)
+                this._stage.removeEventListener(egret.Event.ENTER_FRAME, this.onTick, this);
 
         }
         private onUpdate() {
+            dragonBones.WorldClock.clock.advanceTime(this.tickSec);
             this.container.onUpdate();
             this.scene && this.scene.onUpdate();
         }
         /**切换场景 返回上一个的场景 以便做频繁切换场景使用*/
-        changeScene(scene:cui.Scene):cui.Scene{
+        changeScene(scene: cui.Scene): cui.Scene {
             let lastScene = this.scene;
             lastScene && lastScene.destroy();
             this.rootLayer.removeChildren();
@@ -80,6 +102,12 @@ namespace director {
             scene.create();
             this.rootLayer.addChild(scene.display);
             return lastScene;
+        }
+        get width() {
+            return this._stage.stageWidth;
+        }
+        get height() {
+            return this._stage.stageHeight;
         }
     }
     export var instance: Director = new Director();

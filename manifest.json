@@ -8,20 +8,23 @@
 		"libs/modules/game/game.js",
 		"libs/modules/socket/socket.js",
 		"libs/modules/experimental/experimental.js",
-		"promise/bin/promise.js"
+		"promise/bin/promise.js",
+		"libs/modules/dragonBones/dragonBones.js"
 	],
 	"game": [
-		"bin-debug/entity/Entity.js",
 		"bin-debug/ui/View.js",
+		"bin-debug/entity/Entity.js",
 		"bin-debug/Director.js",
 		"bin-debug/LoadingUI.js",
 		"bin-debug/Main.js",
 		"bin-debug/ThemeAdapter.js",
 		"bin-debug/AssetAdapter.js",
-		"bin-debug/entity/EntityContainer.js",
+		"bin-debug/Config.js",
+		"bin-debug/lib/Armtrue.js",
 		"bin-debug/lib/MyTheme.js",
 		"bin-debug/test/MyTestView.js",
+		"bin-debug/tiledMap/TiledMap.js",
 		"bin-debug/ui/scene.js",
-		"bin-debug/Config.js"
+		"bin-debug/entity/EntityContainer.js"
 	]
 }

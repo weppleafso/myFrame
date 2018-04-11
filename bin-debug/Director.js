@@ -10,6 +10,8 @@ var director;
             this.dispose();
             this._root = root;
             this._stage = root.stage;
+            this._stage.orientation = config.orientation;
+            this._stage.scaleMode = config.scaleMode;
             this._stage.addEventListener(egret.Event.RESIZE, this._onResize, this);
             this.container = new cval.EntityContainer();
             this.rootLayer = new egret.DisplayObjectContainer();
@@ -30,12 +32,25 @@ var director;
             this.onUpdate();
         };
         Director.prototype._onResize = function () {
-            this.rootLayer.width = this._stage.width;
-            this.rootLayer.height = this._stage.height;
-            this.floatLayer.width = this._stage.width;
-            this.floatLayer.height = this._stage.height;
-            this.topLayer.width = this._stage.width;
-            this.topLayer.height = this._stage.height;
+            var contentHeight = config.GAME_CONTENT_HEIGHT;
+            var contentWidth = config.GAME_CONTENT_WIDTH;
+            var realHeight = this._stage.stageHeight;
+            if (realHeight < contentHeight) {
+                this._uiScale = realHeight / contentHeight;
+            }
+            else {
+                this._uiScale = 1;
+            }
+            // init fit design
+            var designWidthScale = 1;
+            var designHeightScale = 1;
+            this._uiFitDesign = Math.min(designWidthScale, designHeightScale);
+            this.rootLayer.width = this.width;
+            this.rootLayer.height = this.height;
+            this.floatLayer.width = this.width;
+            this.floatLayer.height = this.height;
+            this.topLayer.width = this.width;
+            this.topLayer.height = this.height;
             this.scene && this.scene.onResize();
         };
         Director.prototype.dispose = function () {
@@ -64,6 +79,20 @@ var director;
             this.rootLayer.addChild(scene.display);
             return lastScene;
         };
+        Object.defineProperty(Director.prototype, "width", {
+            get: function () {
+                return this._stage.stageWidth;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Director.prototype, "height", {
+            get: function () {
+                return this._stage.stageHeight;
+            },
+            enumerable: true,
+            configurable: true
+        });
         return Director;
     }());
     __reflect(Director.prototype, "Director");
