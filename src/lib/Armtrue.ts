@@ -1,4 +1,3 @@
-// TypeScript file
 namespace clib {
 
     var dbFactory: dragonBones.EgretFactory = new dragonBones.EgretFactory();
@@ -16,28 +15,31 @@ namespace clib {
 
         var loadRes = function () {
             if (sk && tx && tj) {
-                if (dbFactory.getDragonBonesData(name)) {
-                    dbFactory.removeDragonBonesData(name);
+                // if (dbFactory.getDragonBonesData(name)) {
+                //     dbFactory.removeDragonBonesData(name);
+                // }
+                if (dbFactory.getDragonBonesData(name) && dbFactory.getTextureAtlasData(name)) {
+                    return callBack && callBack.call(thisObject);
                 }
                 dbFactory.parseDragonBonesData(sk);
-                if (dbFactory.getTextureAtlasData(name)) {
-                    dbFactory.removeTextureAtlasData(name);
-                }
+                // if (dbFactory.getTextureAtlasData(name)) {
+                //     dbFactory.removeTextureAtlasData(name);
+                // }
                 dbFactory.parseTextureAtlasData(tj, tx);
                 egret.log('load armature: ' + name);
                 callBack && callBack.call(thisObject);
             }
         }
         RES.getResAsync(skName, (data) => {
-            let sk = data;
+            sk = data;
             loadRes();
         }, null);
         RES.getResAsync(tjName, (data) => {
-            let tj = data;
+            tj = data;
             loadRes();
         }, null);
         RES.getResAsync(txName, (data) => {
-            let tx = data;
+            tx = data;
             loadRes();
         }, null);
     }
@@ -79,7 +81,7 @@ namespace clib {
         }
 
         private onArmatureLoad() {
-            this.display = dbFactory.buildArmature(this._name);
+            this.display = dbFactory.buildArmature("armatureName",this._name);
             this.addChildAt(this.display.display, 0);
             this.onAdd();
             if (this._byAnimComplete || this._onceAnimComplete) {
@@ -131,12 +133,13 @@ namespace clib {
         private onAdd() {
             if (!this._addClock && this.display && this.stage) {
                 this._addClock = true;
-                dragonBones.WorldClock.clock.add(this.display);
+                this.display._dragonBones.clock.add(this.display);
             }
         }
 
         private onRemoved() {
-            dragonBones.WorldClock.clock.remove(this.display);
+            this._addClock = false;
+            this.display._dragonBones.clock.remove(this.display);
         }
 
         /**

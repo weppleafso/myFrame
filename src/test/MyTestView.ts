@@ -9,7 +9,7 @@ namespace ctest{
             });
         }
         onCreate(){
-
+            this.addChild(new clib.MovieClip("bird"));
         }
         onDestroy(){
 

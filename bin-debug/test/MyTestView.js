@@ -24,6 +24,7 @@ var ctest;
             }) || this;
         }
         MyTestView.prototype.onCreate = function () {
+            this.addChild(new clib.MovieClip("bird"));
         };
         MyTestView.prototype.onDestroy = function () {
         };

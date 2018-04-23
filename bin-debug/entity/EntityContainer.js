@@ -9,7 +9,7 @@ var cval;
             this._entityList = [];
         }
         EntityContainer.prototype.addEntity = function (entity) {
-            if (entity.manager) {
+            if (!entity.manager) {
                 this._entityList.push(entity);
                 entity.create();
                 entity.manager = this;

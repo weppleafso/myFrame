@@ -19,12 +19,14 @@
 		"bin-debug/Main.js",
 		"bin-debug/ThemeAdapter.js",
 		"bin-debug/AssetAdapter.js",
+		"bin-debug/entity/EntityContainer.js",
 		"bin-debug/Config.js",
-		"bin-debug/lib/Armtrue.js",
+		"bin-debug/lib/CallBackList.js",
+		"bin-debug/lib/MovieClip.js",
 		"bin-debug/lib/MyTheme.js",
 		"bin-debug/test/MyTestView.js",
 		"bin-debug/tiledMap/TiledMap.js",
 		"bin-debug/ui/scene.js",
-		"bin-debug/entity/EntityContainer.js"
+		"bin-debug/lib/Armtrue.js"
 	]
 }

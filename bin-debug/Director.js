@@ -29,6 +29,7 @@ var director;
             var dt = nowDt - this.lastTick;
             this.lastTick = nowDt;
             this.tickMs = Math.min(dt, 100);
+            this.tickSec = this.tickMs / 1000;
             this.onUpdate();
         };
         Director.prototype._onResize = function () {
@@ -66,6 +67,7 @@ var director;
                 this._stage.removeEventListener(egret.Event.ENTER_FRAME, this.onTick, this);
         };
         Director.prototype.onUpdate = function () {
+            dragonBones.WorldClock.clock.advanceTime(this.tickSec);
             this.container.onUpdate();
             this.scene && this.scene.onUpdate();
         };

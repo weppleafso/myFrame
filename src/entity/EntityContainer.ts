@@ -6,7 +6,7 @@ namespace cval{
             this._entityList = [];
         }
         addEntity(entity:Entity){
-            if(entity.manager){
+            if(!entity.manager){
                 this._entityList.push(entity);
                 entity.create();
                 entity.manager = this;
