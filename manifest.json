@@ -18,15 +18,20 @@
 		"bin-debug/LoadingUI.js",
 		"bin-debug/Main.js",
 		"bin-debug/ThemeAdapter.js",
+		"bin-debug/battle/Action.js",
+		"bin-debug/battle/Actor.js",
 		"bin-debug/AssetAdapter.js",
 		"bin-debug/entity/EntityContainer.js",
-		"bin-debug/Config.js",
+		"bin-debug/lib/Armtrue.js",
 		"bin-debug/lib/CallBackList.js",
 		"bin-debug/lib/MovieClip.js",
 		"bin-debug/lib/MyTheme.js",
+		"bin-debug/lib/Table.js",
+		"bin-debug/lib/Vec2.js",
 		"bin-debug/test/MyTestView.js",
+		"bin-debug/test/TestActor.js",
 		"bin-debug/tiledMap/TiledMap.js",
 		"bin-debug/ui/scene.js",
-		"bin-debug/lib/Armtrue.js"
+		"bin-debug/Config.js"
 	]
 }

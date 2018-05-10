@@ -17,21 +17,30 @@ var ctest;
     var MyTestView = (function (_super) {
         __extends(MyTestView, _super);
         function MyTestView() {
-            var _this = _super.call(this, {
+            return _super.call(this, {
                 layer: cui.layer.base,
                 mask: true,
-                skin: "skins.ButtonSkin"
+                skin: "MyTestView"
             }) || this;
-            _this.horizontalCenter = NaN;
-            _this.verticalCenter = NaN;
-            _this.x = 0;
-            _this.y = 0;
-            return _this;
         }
+        MyTestView.prototype.createChildren = function () {
+            _super.prototype.createChildren.call(this);
+            this.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onTap, this);
+        };
         MyTestView.prototype.onCreate = function () {
-            this.addChild(new eui.Button());
+            this.addChild(new clib.MovieClip("bird"));
+            var display = new battle.TestActor();
+            var test = new battle.Actor();
+            test.display = display;
+            this.addChild(display);
+            director.instance.container.addEntity(test);
+            this.testActor = test;
         };
         MyTestView.prototype.onDestroy = function () {
+        };
+        MyTestView.prototype.onTap = function (e) {
+            var target = new Vec2(e.localX, e.localY);
+            this.testActor.onMoveTo([target]);
         };
         return MyTestView;
     }(cui.View));

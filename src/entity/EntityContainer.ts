@@ -1,9 +1,16 @@
 // TypeScript file
 namespace cval{
-    export class EntityContainer{
+    export class EntityContainer extends Entity{
         private _entityList:Entity[];
         constructor(){
+            super();
             this._entityList = [];
+        }
+        onCreate(){
+        }
+        onDestroy(){
+            this.removeAllEntity();
+            this._entityList.length = 0;
         }
         addEntity(entity:Entity){
             if(!entity.manager){
@@ -24,10 +31,8 @@ namespace cval{
             if(index != -1){
                 entity.pause = false;
                 entity.destroy();
-                egret.callLater(()=>{
-                    this._entityList.splice(index,1);
-                    entity.manager = null;
-                },this)
+                this._entityList.splice(index,1);
+                entity.manager = null;
             }
             else{
                 egret.warn("移除错误")
