@@ -137,6 +137,7 @@ var clib;
             }
         };
         Armtrue.prototype.onRemoved = function () {
+            this._addClock = false;
             this.display._dragonBones.clock.remove(this.display);
         };
         /**

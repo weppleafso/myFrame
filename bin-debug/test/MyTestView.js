@@ -17,14 +17,19 @@ var ctest;
     var MyTestView = (function (_super) {
         __extends(MyTestView, _super);
         function MyTestView() {
-            return _super.call(this, {
+            var _this = _super.call(this, {
                 layer: cui.layer.base,
                 mask: true,
                 skin: "skins.ButtonSkin"
             }) || this;
+            _this.horizontalCenter = NaN;
+            _this.verticalCenter = NaN;
+            _this.x = 0;
+            _this.y = 0;
+            return _this;
         }
         MyTestView.prototype.onCreate = function () {
-            this.addChild(new clib.MovieClip("bird"));
+            this.addChild(new eui.Button());
         };
         MyTestView.prototype.onDestroy = function () {
         };

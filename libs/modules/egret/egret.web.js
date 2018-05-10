@@ -7709,6 +7709,59 @@ var egret;
                     case 7 /* MeshNode */:
                         this.renderMesh(node, buffer);
                         break;
+                    case 8 /* BatchNode */:
+                        this.renderBatchBitmap(node, buffer);
+                        break;
+                }
+            };
+            /**
+             * @private
+             */
+            WebGLRenderer.prototype.renderBatchBitmap = function (node, buffer) {
+                var image = node.image;
+                if (!image) {
+                    return;
+                }
+                //buffer.imageSmoothingEnabled = node.smoothing;
+                var data = node.drawData;
+                var length = data.length;
+                var pos = 0;
+                var m = node.matrix;
+                var blendMode = node.blendMode;
+                var alpha = node.alpha;
+                if (m) {
+                    buffer.saveTransform();
+                    buffer.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
+                }
+                //这里不考虑嵌套
+                if (blendMode) {
+                    buffer.context.setGlobalCompositeOperation(blendModes[blendMode]);
+                }
+                var originAlpha;
+                if (alpha == alpha) {
+                    originAlpha = buffer.globalAlpha;
+                    buffer.globalAlpha *= alpha;
+                }
+                if (node.filter) {
+                    buffer.context.$filter = node.filter;
+                    while (pos < length) {
+                        buffer.context.drawImage(image, data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], node.imageWidth, node.imageHeight, node.rotated, node.smoothing);
+                    }
+                    buffer.context.$filter = null;
+                }
+                else {
+                    while (pos < length) {
+                        buffer.context.drawImage(image, data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], node.imageWidth, node.imageHeight, node.rotated, node.smoothing);
+                    }
+                }
+                if (blendMode) {
+                    buffer.context.setGlobalCompositeOperation(defaultCompositeOp);
+                }
+                if (alpha == alpha) {
+                    buffer.globalAlpha = originAlpha;
+                }
+                if (m) {
+                    buffer.restoreTransform();
                 }
             };
             /**
