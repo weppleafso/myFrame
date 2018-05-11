@@ -5,6 +5,14 @@ namespace battle {
         end = 2,
         cancel = 3,
     }
+    export var ActionName = {
+        IDEL: "idle",
+        ATTACK: "attack",
+        SKILL: "skill",
+        MOVETARGET: "moveTarget",
+        PARALLEL: "parallel",
+        QUEUE: "quene"
+    }
     /**
      * 设计思路 每个Actor下面有自己的action
      * onBegin 开始动作
@@ -16,21 +24,23 @@ namespace battle {
         /**动作的名字 */
         name: string;
         /**完成动作回调 */
-        completeHandler: Function;
+        completeHandler: clib.CallbackList;
         /**取消回调 */
-        cancelHandler: Function;
+        cancelHandler: clib.CallbackList;
         /**动作的状态 */
         state: ActionState;
         constructor(target) {
             this.target = target;
             this.state = ActionState.stop;
+            this.completeHandler = new clib.CallbackList();
+            this.cancelHandler = new clib.CallbackList();
         }
 
-        byComplete(completeHandler) {
-            this.completeHandler = completeHandler;
+        byComplete(completeHandler: Function,thiz:any) {
+            this.completeHandler.push(completeHandler,thiz);
         }
-        byCancel(cancelHandler) {
-            this.cancelHandler = cancelHandler;
+        byCancel(cancelHandler: Function,thiz) {
+            this.cancelHandler.push(cancelHandler,thiz);
         }
         onBegin() {
             this.state = ActionState.runing;
@@ -42,16 +52,21 @@ namespace battle {
                 this._update();
             }
         }
+        private _destroy() {
+            this.completeHandler.clear();
+            this.cancelHandler.clear();
+            this.target = null;
+        }
 
         protected runEnd() {
             this.state = ActionState.end;
-            this.target = null;
-            this.completeHandler && this.completeHandler();
+            this.completeHandler.invoke();
+            this._destroy();
         }
         onCancel() {
             this.state = ActionState.cancel;
-            this.cancelHandler && this.cancelHandler();
-            this.target = null;
+            this.cancelHandler.invoke();
+            this._destroy();
         }
 
         protected abstract _onBegin();
@@ -61,7 +76,7 @@ namespace battle {
     export class ActionIdle extends ActionBase {
         constructor(target) {
             super(target);
-            this.name = "idle";
+            this.name = ActionName.IDEL;
         }
         protected _onBegin() {
             this.target && this.target.playIdle();
@@ -80,7 +95,7 @@ namespace battle {
         param: any[];
         constructor(target, param: any[]) {
             super(target);
-            this.name = "attack";
+            this.name = ActionName.ATTACK;
             this.param = param;
         }
         protected _onBegin() {
@@ -161,7 +176,7 @@ namespace battle {
                     }
                 }
             }
-            
+
             let dis = speed * tickSec;
             let toPos = this.param[this.index];
             let fromPos = this.target.pos;
@@ -185,8 +200,74 @@ namespace battle {
         updateDir() {
             let toPos = this.param[this.index];
             let vpos = this.target.pos;
-            this.toAngel = Vec2.sub(toPos,vpos).angle;
+            this.toAngel = Vec2.sub(toPos, vpos).angle;
             this.angelRotion = this.toAngel > this.target.dir ? 1 : -1;
+        }
+    }
+    export class ActionParallel extends ActionBase {
+        actions: ActionBase[];
+        endActionNum: number;
+        constructor(target, actions: ActionBase[]) {
+            super(target);
+            this.actions = actions;
+            this.name = ActionName.PARALLEL;
+        }
+        protected _onBegin() {
+            this.endActionNum = 0;
+            for (let i = 0, len = this.actions.length; i < len; i++) {
+                this.actions[i].onBegin();
+                this.actions[i].byComplete(this.onActionEnd,this);
+            }
+        }
+        protected _update() {
+            for (let i = 0, len = this.actions.length; i < len; i++) {
+                this.actions[i].onUpdate();
+            }
+        }
+        onCancel() {
+            for (let i = 0, len = this.actions.length; i < len; i++) {
+                this.actions[i].onCancel();
+            }
+            super.onCancel();
+        }
+        onActionEnd() {
+            this.endActionNum++;
+            if (this.endActionNum >= this.actions.length) {
+                this.runEnd();
+            }
+        }
+    }
+    export class ActionQueue extends ActionBase {
+        actions: ActionBase[];
+        index: number;
+        current: ActionBase;
+        constructor(target, actions: ActionBase[]) {
+            super(target);
+            this.actions = actions;
+            this.name = ActionName.QUEUE;
+        }
+        protected _onBegin() {
+            this.index = -1;
+            this.onNextAction();
+        }
+        private onNextAction() {
+            this.index++;
+            this.current = this.actions[this.index];
+            if (this.index == this.actions.length - 1) {
+                this.current.byComplete(this.runEnd,this);
+            }
+            else {
+                this.current.byComplete(this.onNextAction,this);
+            }
+            this.current.onBegin();
+
+        }
+        protected _update() {
+            this.current.onUpdate();
+        }
+        onCancel() {
+            this.current.onCancel();
+            super.onCancel();
         }
     }
 }

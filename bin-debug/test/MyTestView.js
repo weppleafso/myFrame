@@ -40,7 +40,7 @@ var ctest;
         };
         MyTestView.prototype.onTap = function (e) {
             var target = new Vec2(e.localX, e.localY);
-            this.testActor.onMoveTo([target]);
+            this.testActor.onMovePathTo([target]);
         };
         return MyTestView;
     }(cui.View));
