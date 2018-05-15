@@ -21,6 +21,7 @@ namespace battle {
             this._vpos.x = x;
             this._vpos.y = y;
         }
+        value: number;
     }
     /**障碍物 */
     export class BlockObject {
@@ -48,7 +49,7 @@ namespace battle {
     /**这个类用于计算路径相关，采用区域+A*算法 区域判断是否可以从一个区域到另外一个区域（减少节点数量） 首先每个点都标记着一个区域，还要链接点的ID 以及需求的消耗*/
     export class PathFinder {
         open: PathPoint[];
-        close: PathPoint[];
+        close: { [x_y: string]: boolean };
         /**格子大小 */
         box: number;
 
@@ -58,6 +59,8 @@ namespace battle {
         map: number[][];
         maxRow: number;
         maxColumn: number;
+
+        cost: number;
         constructor() {
             this.box = 20;
         }
@@ -134,7 +137,7 @@ namespace battle {
                         beginCol = endCol;
                     }
                 }
-                else{
+                else {
                     for (let i = row2; i < row1; i++) {
                         let endCol = beginCol + tan;
                         this.setUnReach(i, Math.floor(beginCol), Math.floor(endCol));
@@ -146,8 +149,8 @@ namespace battle {
 
         }
         setUnReach(row, column0, column1) {
-            let min = Math.min(column0,column1);
-            let max = Math.max(column0,column1);
+            let min = Math.min(column0, column1);
+            let max = Math.max(column0, column1);
             for (let i = min; i <= max; i++) {
                 this.map[row][i] = -1;
             }
@@ -164,6 +167,37 @@ namespace battle {
                 }
             }
             g.endFill();
+        }
+        calculatePath(from: Vec2, to: Vec2) {
+            let p0 = new Vec2(Math.floor(from.x / this.box), Math.floor(from.y / this.box));
+            let p1 = new Vec2(Math.floor(to.x / this.box), Math.floor(to.y / this.box));
+            var id = 0;
+            let point = new PathPoint(id++,p0.x,p1.y);
+        }
+        insertOpen(p: PathPoint) {
+            if (this.open.length > 0) {
+                let begin = 0;
+                let end = this.open.length - 1;
+                for (var mid = Math.floor(begin + end) / 2; begin != end; mid = Math.floor(begin + end) / 2) {
+                    let point = this.open[mid];
+                    if (point.value > p.value) {
+                        begin = mid;
+                    }
+                    else {
+                        end = mid;
+                    }
+                }
+                let point = this.open[begin];
+                if (point.value > p.value) {
+                    this.open.splice(begin + 1, 0, p);
+                }
+                else {
+                    this.open.splice(begin, 0, p);
+                }
+            }
+            else {
+                this.open.push(p);
+            }
         }
     }
 }
