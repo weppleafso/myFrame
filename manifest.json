@@ -12,18 +12,20 @@
 		"libs/modules/dragonBones/dragonBones.js"
 	],
 	"game": [
-		"bin-debug/ui/View.js",
 		"bin-debug/entity/Entity.js",
-		"bin-debug/Director.js",
+		"bin-debug/ui/View.js",
+		"bin-debug/lib/CallBackList.js",
 		"bin-debug/LoadingUI.js",
 		"bin-debug/Main.js",
 		"bin-debug/ThemeAdapter.js",
 		"bin-debug/battle/Action.js",
 		"bin-debug/battle/Actor.js",
+		"bin-debug/battle/PathFind.js",
 		"bin-debug/AssetAdapter.js",
 		"bin-debug/entity/EntityContainer.js",
 		"bin-debug/lib/Armtrue.js",
-		"bin-debug/lib/CallBackList.js",
+		"bin-debug/util/Util.js",
+		"bin-debug/lib/GlobalEvent.js",
 		"bin-debug/lib/MovieClip.js",
 		"bin-debug/lib/MyTheme.js",
 		"bin-debug/lib/Table.js",
@@ -32,6 +34,7 @@
 		"bin-debug/test/TestActor.js",
 		"bin-debug/tiledMap/TiledMap.js",
 		"bin-debug/ui/scene.js",
+		"bin-debug/Director.js",
 		"bin-debug/Config.js"
 	]
 }

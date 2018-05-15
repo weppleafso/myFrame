@@ -25,16 +25,21 @@ var ctest;
         }
         MyTestView.prototype.createChildren = function () {
             _super.prototype.createChildren.call(this);
+            this.shape = new egret.Shape();
+            this.addChildAt(this.shape, 0);
             this.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onTap, this);
         };
         MyTestView.prototype.onCreate = function () {
-            this.addChild(new clib.MovieClip("bird"));
+            // this.addChild(new clib.MovieClip("bird"));
             var display = new battle.TestActor();
             var test = new battle.Actor();
             test.display = display;
             this.addChild(display);
             director.instance.container.addEntity(test);
             this.testActor = test;
+            this.pathFinder = new battle.PathFinder();
+            this.pathFinder.init();
+            this.pathFinder.drawRect(this.shape);
         };
         MyTestView.prototype.onDestroy = function () {
         };
