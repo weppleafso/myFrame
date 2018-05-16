@@ -46,7 +46,7 @@ var ctest;
         MyTestView.prototype.onTap = function (e) {
             var target = new Vec2(e.localX, e.localY);
             var ret = this.pathFinder.calculatePath(this.testActor.pos, target);
-            this.testActor.onMovePathTo(ret);
+            this.testActor.onMoveTo(ret);
         };
         return MyTestView;
     }(cui.View));

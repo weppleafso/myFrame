@@ -145,7 +145,13 @@ namespace battle {
         }
         protected _onBegin() {
             this.index = 0;
-            this.updateDir();
+            if(this.param && this.param.length > 0){
+                this.updateDir();
+            }
+            else{
+                this.onCancel();
+            }
+            
         }
         protected _update() {
             let speed = this.target.speed;

@@ -36,7 +36,7 @@ namespace ctest{
         onTap(e:egret.TouchEvent){
             let target = new Vec2(e.localX,e.localY);
             let ret =this.pathFinder.calculatePath(this.testActor.pos,target);
-            this.testActor.onMovePathTo(ret);
+            this.testActor.onMoveTo(ret);
         }
     }
 }
