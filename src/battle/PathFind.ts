@@ -1,12 +1,12 @@
 namespace battle {
     /**点 */
     export class PathPoint {
-        id: number;
+        id: string;
         links: { [id: number]: number };
         private _vpos: Vec2;
         arenaIds: number;
-        constructor(id, x: number, y: number) {
-            this.id
+        constructor(x: number, y: number) {
+            this.id = x + "_" + y;
             this._vpos = new Vec2(x, y);
             this.links = [];
         }
@@ -21,7 +21,10 @@ namespace battle {
             this._vpos.x = x;
             this._vpos.y = y;
         }
-        value: number;
+        h: number;
+        f: number;
+        g: number;
+        parent: PathPoint;
     }
     /**障碍物 */
     export class BlockObject {
@@ -49,6 +52,7 @@ namespace battle {
     /**这个类用于计算路径相关，采用区域+A*算法 区域判断是否可以从一个区域到另外一个区域（减少节点数量） 首先每个点都标记着一个区域，还要链接点的ID 以及需求的消耗*/
     export class PathFinder {
         open: PathPoint[];
+        openDic: { [id: string]: PathPoint };
         close: { [x_y: string]: boolean };
         /**格子大小 */
         box: number;
@@ -73,6 +77,7 @@ namespace battle {
             b1.addPoint(new Vec2(0, 100));
             b1.addPoint(new Vec2(100, 200));
             b1.addPoint(new Vec2(100, 0));
+
             this.blocks.push(b1);
             this.initMap();
 
@@ -169,35 +174,116 @@ namespace battle {
             g.endFill();
         }
         calculatePath(from: Vec2, to: Vec2) {
+            this.open = [];
+            this.openDic = {};
+            this.close = {};
             let p0 = new Vec2(Math.floor(from.x / this.box), Math.floor(from.y / this.box));
             let p1 = new Vec2(Math.floor(to.x / this.box), Math.floor(to.y / this.box));
-            var id = 0;
-            let point = new PathPoint(id++,p0.x,p1.y);
+            let g = 0;
+            let h = Math.abs(p0.x - p1.x) + Math.abs(p0.y - p1.y);
+            let f = g + h;
+            let parent = null;
+            this.insertOpen(p0.x, p0.y, f, g, h, parent);
+            let last: PathPoint = null;
+            let dirs = [[1, 0, 1], [1, 1, 1.41], [0, 1, 1], [-1, 1, 1.41], [-1, 0, 1], [-1, -1, 1.41], [0, -1, 1], [1, -1, 1.41]];
+            while (this.open.length != 0) {
+                //八方向 取出一个
+                let point = this.open.shift();
+                delete this.openDic[point.id];
+                for (let i = 0; i < dirs.length; i++) {
+                    let [x, y, cost] = dirs[i];
+                    x += point.vpos.x;
+                    y += point.vpos.y;
+                    if(x < 0 || x >= this.maxRow){
+                        continue;
+                    }
+                    if(y < 0 || y >= this.maxColumn){
+                        continue;
+                    }
+                    if (this.close[x + "_" + y]) {
+                        continue;
+                    }
+                    if(this.map[x][y] == -1){
+                        continue;
+                    }
+                    let g = point.g + cost;
+                    let h = Math.abs(x - p1.x) + Math.abs(y - p1.y);
+                    let f = g + h;
+                    let parent = point;
+                    let retPoint = this.insertOpen(x, y, f, g, h, parent);
+                    if (retPoint && retPoint.vpos.opEqual(p1)) {
+                        if (last == null) {
+                            last = retPoint;
+                        }
+                        if (retPoint.f < last.f) {
+                            last = retPoint;
+                        }
+                    }
+                }
+                this.close[point.id] = true;
+            }
+            let seek = last;
+            let road: Vec2[] = [];
+            while (seek != null) {
+                seek.vpos.opMutiRadio(this.box)
+                road.push(seek.vpos);
+                seek = seek.parent;
+            }
+            road = road.reverse();
+            return road;
         }
-        insertOpen(p: PathPoint) {
+        insertOpen(x: number, y: number, f: number, g: number, h: number, parent: PathPoint) {
+            let id = x + "_" + y;
+            let p = this.openDic[id];
+            if (p != null) {
+                if (p.f > f) {
+                    let index = this.open.indexOf(p);
+                    this.open.splice(index, 1);
+                }
+                else{
+                    return null;
+                }
+            }
+            else {
+                p = new PathPoint(x, y);
+            }
+            p.f = f;
+            p.g = g;
+            p.h = h;
+            p.parent = parent;
+            
+            this.openDic[id] = p;
             if (this.open.length > 0) {
                 let begin = 0;
                 let end = this.open.length - 1;
-                for (var mid = Math.floor(begin + end) / 2; begin != end; mid = Math.floor(begin + end) / 2) {
-                    let point = this.open[mid];
-                    if (point.value > p.value) {
-                        begin = mid;
-                    }
-                    else {
+                while(begin < end){
+                    let mid = Math.floor((begin + end) / 2);
+                    let midP = this.open[mid];
+                    if(midP.f == p.f){
                         end = mid;
+                        break;
+                    }
+                    else{
+                        if(midP.f < p.f){
+                            begin = mid + 1;
+                        }
+                        else{
+                            end = mid;
+                        }
                     }
                 }
-                let point = this.open[begin];
-                if (point.value > p.value) {
-                    this.open.splice(begin + 1, 0, p);
+                let point = this.open[end];
+                if (point.f > p.f) {
+                    this.open.splice(end, 0, p);
                 }
                 else {
-                    this.open.splice(begin, 0, p);
+                    this.open.splice(end + 1, 0, p);
                 }
             }
             else {
                 this.open.push(p);
             }
+            return p;
         }
     }
 }

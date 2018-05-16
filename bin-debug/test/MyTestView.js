@@ -45,7 +45,8 @@ var ctest;
         };
         MyTestView.prototype.onTap = function (e) {
             var target = new Vec2(e.localX, e.localY);
-            this.testActor.onMovePathTo([target]);
+            var ret = this.pathFinder.calculatePath(this.testActor.pos, target);
+            this.testActor.onMovePathTo(ret);
         };
         return MyTestView;
     }(cui.View));

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<e:Skin class="TestActor" width="50" height="50" xmlns:e="http://ns.egret.com/eui">
+<e:Skin class="TestActor" width="20" height="20" xmlns:e="http://ns.egret.com/eui">
 	<e:Rect left="0" right="0" top="0" bottom="0" fillColor="0xff3030"/>
-	<e:Rect width="20" height="20" fillColor="0xfefecb" verticalCenter="0" right="0"/>
+	<e:Rect width="5" height="5" fillColor="0xfefecb" verticalCenter="0" right="0"/>
 </e:Skin>
