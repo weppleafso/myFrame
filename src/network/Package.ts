@@ -54,6 +54,7 @@ namespace pomelo {
             offset: number = 0
         ) {
             let ret:{type?:number,length?:number,body?:egret.ByteArray} = {};
+            bytes.position = offset;
             let type = bytes.readUnsignedByte();
             let len1 = bytes.readUnsignedByte();
 			let len2 = bytes.readUnsignedByte();
@@ -67,6 +68,7 @@ namespace pomelo {
             else{
                 ret.body = null;
             }
+            return ret;
         }
     }
 }
