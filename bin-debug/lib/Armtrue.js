@@ -16,7 +16,7 @@ var clib;
     var dbFactory = new dragonBones.EgretFactory();
     function loadArmtrueRes(name, callBack, thisObject) {
         if (dbFactory.getDragonBonesData(name) && dbFactory.getTextureAtlasData(name)) {
-            callBack && callBack.call(thisObject);
+            return callBack && callBack.call(thisObject);
         }
         var sk, tx, tj;
         var skName = name + '_ske_json';

@@ -2,8 +2,8 @@ namespace clib {
 
     var dbFactory: dragonBones.EgretFactory = new dragonBones.EgretFactory();
     export function loadArmtrueRes(name: string, callBack: Function, thisObject?: any) {
-        if (dbFactory.getDragonBonesData(name) && dbFactory.getTextureAtlasData(name)) {
-            callBack && callBack.call(thisObject);
+         if (dbFactory.getDragonBonesData(name) && dbFactory.getTextureAtlasData(name)) {
+            return callBack && callBack.call(thisObject);
         }
         let sk, tx, tj;
         let skName = name + '_ske_json';
