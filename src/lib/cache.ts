@@ -8,12 +8,6 @@ namespace clib{
             this.classType = classType;
             this.initFunc = initFunc;
         }
-        onCreate(){
-            
-        }
-        onDestroy(){
-
-        }
         recyle(obj:any){
             this.pool.push(obj);
         }
