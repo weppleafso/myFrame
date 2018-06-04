@@ -5,6 +5,8 @@ namespace ctest{
         gpMap:eui.Group;
         shape:egret.Shape;
         pathFinder:battle.PathFinder;
+        btnMusic:eui.Button;
+        btnEffect:eui.Button;
         constructor(){
             super({
                 layer:cui.layer.base,
@@ -14,11 +16,27 @@ namespace ctest{
         }
         protected createChildren(){
             super.createChildren();
-            this.shape = new egret.Shape();
-            this.addChildAt(this.shape,0);
-            this.addEventListener(egret.TouchEvent.TOUCH_TAP,this.onTap,this);
+            
+        }
+        onChangeMusic(){
+            let list = ["homepage_bgm_mp3","comic_bgm_mp3"];
+            let i = Math.floor(Math.random() * list.length);
+            let res = list[i];
+            clib.sound.playMusic(res,true);
+        }
+        onChangeEffect(){
+            let list = ["box_push_mp3","click_mp3","code_error_mp3"];
+            let i = Math.floor(Math.random() * list.length);
+            let res = list[i];
+            clib.sound.playEffectSound(res,true);
         }
         onCreate(){
+            this.shape = new egret.Shape();
+            this.addChildAt(this.shape,0);
+            clib.sound.playMusic("comic_bgm_mp3",true);
+            this.gpMap.addEventListener(egret.TouchEvent.TOUCH_TAP,this.onTap,this);
+            this.btnMusic.addEventListener(egret.TouchEvent.TOUCH_TAP,this.onChangeMusic,this);
+            this.btnEffect.addEventListener(egret.TouchEvent.TOUCH_TAP,this.onChangeEffect,this);
             // this.addChild(new clib.MovieClip("bird"));
             let display = new battle.TestActor();
             let test = new battle.Actor();

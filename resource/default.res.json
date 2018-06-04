@@ -173,6 +173,31 @@
 			"name":"fence2_tex_png",
 			"type":"image",
 			"url":""
+		},
+		{
+			"name":"comic_bgm_mp3",
+			"type":"sound",
+			"url":"music/comic_bgm.mp3"
+		},
+		{
+			"name":"homepage_bgm_mp3",
+			"type":"sound",
+			"url":"music/homepage_bgm.mp3"
+		},
+		{
+			"name":"box_push_mp3",
+			"type":"sound",
+			"url":"sound/box_push.mp3"
+		},
+		{
+			"name":"click_mp3",
+			"type":"sound",
+			"url":"sound/click.mp3"
+		},
+		{
+			"name":"code_error_mp3",
+			"type":"sound",
+			"url":"sound/code_error.mp3"
 		}
 	]
 }

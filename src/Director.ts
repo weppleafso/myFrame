@@ -40,6 +40,9 @@ namespace director {
 
             this.lastTick = egret.getTimer();
 
+            clib.sound = new clib.SoundManager(false);
+            clib.sound.init();
+
             this._stage.addEventListener(egret.Event.ENTER_FRAME, this.onTick, this);
         }
         private onTick() {

@@ -22,6 +22,8 @@ var director;
             this._root.addChild(this.topLayer);
             this._onResize();
             this.lastTick = egret.getTimer();
+            clib.sound = new clib.SoundManager(false);
+            clib.sound.init();
             this._stage.addEventListener(egret.Event.ENTER_FRAME, this.onTick, this);
         };
         Director.prototype.onTick = function () {

@@ -25,11 +25,26 @@ var ctest;
         }
         MyTestView.prototype.createChildren = function () {
             _super.prototype.createChildren.call(this);
-            this.shape = new egret.Shape();
-            this.addChildAt(this.shape, 0);
-            this.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onTap, this);
+        };
+        MyTestView.prototype.onChangeMusic = function () {
+            var list = ["homepage_bgm_mp3", "comic_bgm_mp3"];
+            var i = Math.floor(Math.random() * list.length);
+            var res = list[i];
+            clib.sound.playMusic(res, true);
+        };
+        MyTestView.prototype.onChangeEffect = function () {
+            var list = ["box_push_mp3", "click_mp3", "code_error_mp3"];
+            var i = Math.floor(Math.random() * list.length);
+            var res = list[i];
+            clib.sound.playEffectSound(res, true);
         };
         MyTestView.prototype.onCreate = function () {
+            this.shape = new egret.Shape();
+            this.addChildAt(this.shape, 0);
+            clib.sound.playMusic("comic_bgm_mp3", true);
+            this.gpMap.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onTap, this);
+            this.btnMusic.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onChangeMusic, this);
+            this.btnEffect.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onChangeEffect, this);
             // this.addChild(new clib.MovieClip("bird"));
             var display = new battle.TestActor();
             var test = new battle.Actor();
