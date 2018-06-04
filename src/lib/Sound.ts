@@ -105,7 +105,7 @@ namespace clib {
                 callBack && callBack();
             }
         }
-        public playEffectSound(res: string, fade: boolean = true, loop: number = 1, channel: number = -1): number {
+        public playEffect(res: string, fade: boolean = true, loop: number = 1, channel: number = -1): number {
             if (this.effectList.length > MAX_EFFECT_PLAY) {
                 let item = this.effectList.shift();
                 this._stopEffectSound(item);
@@ -167,7 +167,7 @@ namespace clib {
                 item.setDead();
             }
         }
-        public stopEffectSound(id: number) {
+        public stopEffect(id: number) {
             let item: SoundInfo = null;
             for (let i = 0, len = this.effectList.length; i < len; i++) {
                 item = this.effectList[i];

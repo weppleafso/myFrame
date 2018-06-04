@@ -28,7 +28,7 @@ namespace ctest{
             let list = ["box_push_mp3","click_mp3","code_error_mp3"];
             let i = Math.floor(Math.random() * list.length);
             let res = list[i];
-            clib.sound.playEffectSound(res,true);
+            clib.sound.playEffect(res,true);
         }
         onCreate(){
             this.shape = new egret.Shape();
