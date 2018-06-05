@@ -42,6 +42,14 @@ namespace director {
 
             clib.sound = new clib.SoundManager(false);
             clib.sound.init();
+            clib.netWork = new clib.NetWork();
+            clib.netWork.connect("127.0.0.1",3010,(success:boolean)=>{
+                console.log(success);
+                clib.netWork.request("connector.entryHandler.entry", null, (res) => {
+                    console.log(res);
+                }, this);
+            },this);
+            
 
             this._stage.addEventListener(egret.Event.ENTER_FRAME, this.onTick, this);
         }

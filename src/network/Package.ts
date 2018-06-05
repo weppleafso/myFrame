@@ -62,7 +62,7 @@ namespace pomelo {
             let length = len1 << 16 | len2 << 8 | len3;
             ret.type = type;
             ret.length = length; 
-            if(bytes.bytesAvailable > length){
+            if(bytes.bytesAvailable >= length){
                 ret.body = bytes;
             }
             else{

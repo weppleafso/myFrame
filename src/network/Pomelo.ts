@@ -69,7 +69,7 @@ namespace pomelo {
 			try {
 				let chttps = params.https ? PomeloClient.TYPE_WSS : PomeloClient.TYPE_WS;
 				let url = chttps + params.host + ":" + params.port;
-				this._socket.connectByUrl(chttps);
+				this._socket.connectByUrl(url);
 			}
 			catch (e) {
 				egret.error(e);
@@ -255,6 +255,11 @@ namespace pomelo {
 							this._heartTimer.start();
 							//发送确认包
 							this.send(this._package.encode(PackageType.HandshakeAck,0,null,0))
+							if(this._initCb){
+								this._initCb(true, handShake.user);
+								this._initCb = null;
+							}
+							
 						}
 						else{
 							this.disconnect();

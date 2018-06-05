@@ -7,6 +7,7 @@ var director;
         function Director() {
         }
         Director.prototype.init = function (root) {
+            var _this = this;
             this.dispose();
             this._root = root;
             this._stage = root.stage;
@@ -24,6 +25,13 @@ var director;
             this.lastTick = egret.getTimer();
             clib.sound = new clib.SoundManager(false);
             clib.sound.init();
+            clib.netWork = new clib.NetWork();
+            clib.netWork.connect("127.0.0.1", 3010, function (success) {
+                console.log(success);
+                clib.netWork.request("connector.entryHandler.entry", null, function (res) {
+                    console.log(res);
+                }, _this);
+            }, this);
             this._stage.addEventListener(egret.Event.ENTER_FRAME, this.onTick, this);
         };
         Director.prototype.onTick = function () {
