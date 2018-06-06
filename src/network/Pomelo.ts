@@ -106,10 +106,10 @@ namespace pomelo {
 			}
 		}
 
-		onRequest(route:any,msg:{},cb:Function){
-			if(this._socket && this._socket.connected){
+		onRequest(route: any, msg: {}, cb: Function) {
+			if (this._socket && this._socket.connected) {
 				let reqId = ++PomeloClient._reqId;
-				console.group("request: "+reqId);
+				console.group("request: " + reqId);
 				console.log(route);
 				console.log(msg);
 				console.groupEnd();
@@ -118,11 +118,11 @@ namespace pomelo {
 				var m = this._message.encode(MessageType.Request, reqId, route, msg);
 				this.send(this._package.encode(PackageType.Data, m.length, m, 0));
 			}
-			else{
+			else {
 				egret.error('Socket is not connected.');
 			}
 		}
-		onNotify(route:string,msg:any){
+		onNotify(route: string, msg: any) {
 			console.group("Notify");
 			console.log(route);
 			console.log(msg);
@@ -144,20 +144,20 @@ namespace pomelo {
 		}
 		closeConnect(e: egret.Event) {
 			console.info('** connection closed');
-			if( this._connecting ) {
-				if( this._initCb ) {
+			if (this._connecting) {
+				if (this._initCb) {
 					this._initCb(false);
 					this._initCb = null;
 				}
 				this._connecting = false;
 			}
-			this.stopHeartBeat();
+			this.disconnect();
 			this.dispatchEventWith(PomeloClient.EVENT_CLOSE);
 		}
 		onError(e: egret.IOErrorEvent) {
 			console.info('** connection error');
-			if( this._connecting ) {
-				if( this._initCb ) {
+			if (this._connecting) {
+				if (this._initCb) {
 					this._initCb(false);
 					this._initCb = null;
 				}
@@ -166,8 +166,12 @@ namespace pomelo {
 			this.disconnect();
 			this.dispatchEventWith(PomeloClient.EVENT_ERROR);
 		}
-		disconnect(){
-			if( this._socket && this._socket.connected ) {
+		disconnect() {
+			if (this._socket && this._socket.connected) {
+				this._socket.removeEventListener(egret.Event.CONNECT, this.onConnect, this);
+				this._socket.removeEventListener(egret.Event.CLOSE, this.closeConnect, this);
+				this._socket.removeEventListener(egret.IOErrorEvent.IO_ERROR, this.onError, this);
+				this._socket.removeEventListener(egret.ProgressEvent.SOCKET_DATA, this.onSocketData, this);
 				this._socket.close();
 				this._socket = null;
 				this._package = null;
@@ -192,53 +196,53 @@ namespace pomelo {
 			}
 		}
 		processMsg(msg: { type?: number, msgId?: number, route?: string, msg: {} }) {
-			switch(msg.type){
-				case MessageType.Request:{
+			switch (msg.type) {
+				case MessageType.Request: {
 					//服务器是不会发送request的
 					egret.error('unexpected message type:', msg.type);
 					break;
 				}
-				case MessageType.Notify:{
+				case MessageType.Notify: {
 					egret.error('unexpected message type:', msg.type);
 					//服务器是不会发送Notify的
 					break;
 				}
-				case MessageType.Response:{
-					console.group("Response: "+msg.msgId);
+				case MessageType.Response: {
+					console.group("Response: " + msg.msgId);
 					console.log(msg.msg);
 					console.groupEnd();
-					if(this._handlers[msg.msgId]){
+					if (this._handlers[msg.msgId]) {
 						this._handlers[msg.msgId](msg.msg);
 						delete this._handlers[msg.msgId];
 					}
-					else{
-						egret.error("no handler Response",msg.msgId);
+					else {
+						egret.error("no handler Response", msg.msgId);
 					}
 					break;
 				}
-				case MessageType.Push:{
-					console.group("Push: "+msg.route);
+				case MessageType.Push: {
+					console.group("Push: " + msg.route);
 					console.log(msg.msg);
 					console.groupEnd();
-					if(this._ons[msg.route]){
+					if (this._ons[msg.route]) {
 						this._ons[msg.route](msg.msg);
 					}
-					else{
-						egret.error("no handle Push",msg.route);
+					else {
+						egret.error("no handle Push", msg.route);
 					}
 					break;
 				}
-				
+
 			}
 		}
 		/**发送心跳包 */
 		private sendHeartBeat() {
-			this.send(this._package.encode(PackageType.Heartbeat,0,null,0))
+			this.send(this._package.encode(PackageType.Heartbeat, 0, null, 0))
 		}
 		private stopHeartBeat() {
 			if (this._heartTimer) {
 				this._heartTimer.stop();
-				this._heartTimer.removeEventListener(egret.TimerEvent.TIMER,this.sendHeartBeat,this);
+				this._heartTimer.removeEventListener(egret.TimerEvent.TIMER, this.sendHeartBeat, this);
 				this._heartTimer = null;
 			}
 		}
@@ -251,17 +255,17 @@ namespace pomelo {
 						if (handShake.code == 200) {
 							this.stopHeartBeat();
 							this._heartTimer = new egret.Timer(handShake.sys.heartbeat * 1000, 0);
-							this._heartTimer.addEventListener(egret.TimerEvent.TIMER,this.sendHeartBeat,this);
+							this._heartTimer.addEventListener(egret.TimerEvent.TIMER, this.sendHeartBeat, this);
 							this._heartTimer.start();
 							//发送确认包
-							this.send(this._package.encode(PackageType.HandshakeAck,0,null,0))
-							if(this._initCb){
+							this.send(this._package.encode(PackageType.HandshakeAck, 0, null, 0))
+							if (this._initCb) {
 								this._initCb(true, handShake.user);
 								this._initCb = null;
 							}
-							
+
 						}
-						else{
+						else {
 							this.disconnect();
 						}
 					}
@@ -277,7 +281,7 @@ namespace pomelo {
 				}
 				case PackageType.Data: {
 					//数据包
-					let msg = this._message.decode(pkg.body,pkg.length);
+					let msg = this._message.decode(pkg.body, pkg.length);
 					this.processMsg(msg);
 					break;
 				}
@@ -292,7 +296,7 @@ namespace pomelo {
 			}
 		}
 		recvPackage() {
-			while (this._recvCache.bytesAvailable >= 4) {
+			while (this._recvCache && this._recvCache.bytesAvailable >= 4) {
 				let read_position = this._recvCache.position;
 				let pkg = this._package.decode(this._recvCache, this._recvCache.position);
 				if (pkg) {
@@ -303,12 +307,15 @@ namespace pomelo {
 					break;
 				}
 			}
-			if (this._recvCache.bytesAvailable == 0) {
-				this._recvCache.clear();
+			if (this._recvCache) {
+				if (this._recvCache.bytesAvailable == 0) {
+					this._recvCache.clear();
+				}
+				else {
+					console.info('** incomplete package');
+				}
 			}
-			else {
-				console.info('** incomplete package');
-			}
+
 		}
 		doTest() {
 			var ret = new egret.ByteArray();

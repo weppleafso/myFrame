@@ -10,7 +10,8 @@ namespace clib{
          * 建立服务器连接
          */
         connect(host:string,port:number,callBack:Function,thisObject:any){
-            this.disconnect();
+            console.log('** network connected',host,port);
+            
             this._pomelo.init({
                 host: host,
                 port: port,
@@ -27,14 +28,15 @@ namespace clib{
             if (this._connected) {
                 console.log('** network disconnect');
                 this._pomelo.disconnect();
+                // this._pomelo = null;
                 this._connected = false;
             }
         }
 
-        request(route:string,msg:{},callBack:Function,thisObject:any){
+        request(route:string,msg:{},callBack:Function){
             if(this._connected){
-                this._pomelo.onRequest(route,msg,()=>{
-                    callBack.call(thisObject);
+                this._pomelo.onRequest(route,msg,(res)=>{
+                    callBack(res);
                 })
             }
         }

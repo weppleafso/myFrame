@@ -43,13 +43,31 @@ namespace director {
             clib.sound = new clib.SoundManager(false);
             clib.sound.init();
             clib.netWork = new clib.NetWork();
-            clib.netWork.connect("127.0.0.1",3010,(success:boolean)=>{
+            clib.netWork.connect("127.0.0.1", 4010, (success: boolean) => {
                 console.log(success);
-                clib.netWork.request("connector.entryHandler.entry", null, (res) => {
+                clib.netWork.request("gate.gateHandler.queryEntry", { uid: 111 }, (res) => {
                     console.log(res);
-                }, this);
-            },this);
-            
+                    if (res.code == 0) {
+                        clib.netWork.disconnect();
+                        clib.netWork.connect(res.host, 3010, (success: boolean) => {
+                            if (success) {
+                                console.log("aaaa", success);
+                                clib.netWork.request("connector.entryHandler.entry", { nickName: "haha", rid: 1 }, (res) => {
+                                });
+                            }
+                        }, this);
+                    }
+
+                });
+            }, this);
+            // clib.netWork.connect("127.0.0.1", 3010, (success: boolean) => {
+            //     if (success) {
+            //         console.log("aaaa", success);
+            //         clib.netWork.request("connector.entryHandler.entry", { nickName: "haha", rid: 1 }, (res) => {
+            //         });
+            //     }
+            // }, this);
+
 
             this._stage.addEventListener(egret.Event.ENTER_FRAME, this.onTick, this);
         }

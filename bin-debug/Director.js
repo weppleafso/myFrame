@@ -26,12 +26,29 @@ var director;
             clib.sound = new clib.SoundManager(false);
             clib.sound.init();
             clib.netWork = new clib.NetWork();
-            clib.netWork.connect("127.0.0.1", 3010, function (success) {
+            clib.netWork.connect("127.0.0.1", 4010, function (success) {
                 console.log(success);
-                clib.netWork.request("connector.entryHandler.entry", null, function (res) {
+                clib.netWork.request("gate.gateHandler.queryEntry", { uid: 111 }, function (res) {
                     console.log(res);
-                }, _this);
+                    if (res.code == 0) {
+                        clib.netWork.disconnect();
+                        clib.netWork.connect(res.host, 3010, function (success) {
+                            if (success) {
+                                console.log("aaaa", success);
+                                clib.netWork.request("connector.entryHandler.entry", { nickName: "haha", rid: 1 }, function (res) {
+                                });
+                            }
+                        }, _this);
+                    }
+                });
             }, this);
+            // clib.netWork.connect("127.0.0.1", 3010, (success: boolean) => {
+            //     if (success) {
+            //         console.log("aaaa", success);
+            //         clib.netWork.request("connector.entryHandler.entry", { nickName: "haha", rid: 1 }, (res) => {
+            //         });
+            //     }
+            // }, this);
             this._stage.addEventListener(egret.Event.ENTER_FRAME, this.onTick, this);
         };
         Director.prototype.onTick = function () {

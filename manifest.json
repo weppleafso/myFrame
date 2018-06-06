@@ -27,7 +27,7 @@
 		"bin-debug/lib/cache.js",
 		"bin-debug/lib/CallBackList.js",
 		"bin-debug/lib/GlobalEvent.js",
-		"bin-debug/util/Util.js",
+		"bin-debug/Config.js",
 		"bin-debug/lib/MyTheme.js",
 		"bin-debug/lib/Sound.js",
 		"bin-debug/lib/Table.js",
@@ -41,6 +41,6 @@
 		"bin-debug/tiledMap/TiledMap.js",
 		"bin-debug/ui/scene.js",
 		"bin-debug/Director.js",
-		"bin-debug/Config.js"
+		"bin-debug/util/Util.js"
 	]
 }
