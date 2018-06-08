@@ -55,9 +55,9 @@ var ctest;
             this.pathFinder = new battle.PathFinder();
             this.pathFinder.init();
             this.pathFinder.drawRect(this.shape);
-            clib.useCache(battle.TestActor, function (obj, a) {
-                console.log(a);
-            });
+            // clib.useCache(battle.TestActor,function(obj:battle.TestActor,a:number){
+            //     console.log(a);
+            // })
         };
         MyTestView.prototype.onDestroy = function () {
         };

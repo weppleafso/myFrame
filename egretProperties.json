@@ -47,6 +47,10 @@
     },
     {
       "name":"dragonBones"
+    },
+    {
+      "name":"particle",
+      "path":"./particle"
     }
   ]
 }
