@@ -39,27 +39,6 @@ namespace director {
             this._onResize();
 
             this.lastTick = egret.getTimer();
-
-            clib.sound = new clib.SoundManager(false);
-            clib.sound.init();
-            clib.netWork = new clib.NetWork();
-            clib.netWork.connect("127.0.0.1", 4010, (success: boolean) => {
-                console.log(success);
-                clib.netWork.request("gate.gateHandler.queryEntry", { uid: 111 }, (res) => {
-                    console.log(res);
-                    if (res.code == 0) {
-                        clib.netWork.disconnect();
-                        clib.netWork.connect(res.host, 3010, (success: boolean) => {
-                            if (success) {
-                                console.log("aaaa", success);
-                                clib.netWork.request("connector.entryHandler.entry", { nickName: "haha", rid: 1 }, (res) => {
-                                });
-                            }
-                        }, this);
-                    }
-
-                });
-            }, this);
             // clib.netWork.connect("127.0.0.1", 3010, (success: boolean) => {
             //     if (success) {
             //         console.log("aaaa", success);

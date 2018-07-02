@@ -107,6 +107,7 @@ var cui;
                 var view = children[len - 1];
                 if (!view.viewConfig.fixed) {
                     this.topView = view;
+                    break;
                 }
             }
             if (maskIndex > -1) {
@@ -128,6 +129,19 @@ var cui;
                 this.popView(this.topView);
             }
         };
+        Object.defineProperty(Scene.prototype, "topView", {
+            get: function () {
+                return this._topView;
+            },
+            set: function (view) {
+                if (this._topView != view) {
+                    this._topView = view;
+                    this.topViewName = this._topView['__class__'];
+                }
+            },
+            enumerable: true,
+            configurable: true
+        });
         return Scene;
     }(cval.Entity));
     cui.Scene = Scene;

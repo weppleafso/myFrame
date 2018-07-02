@@ -14,13 +14,13 @@ namespace cui {
 
         mask: eui.Rect;
 
-        maskView:View;
-        topView: View;
+        maskView: View;
+        private _topView: View;
         topViewName: string;
         constructor(baseView) {
             super();
             this.baseView = baseView;
-            
+
             this.mask = new eui.Rect();
             this.mask.alpha = 0.6;
             this.tailZOrder = 0;
@@ -33,15 +33,15 @@ namespace cui {
             this.pushView(this.baseView);
 
             this.container = new cval.EntityContainer();
-            
+
         }
-        onCreate(){
-            this.mask.addEventListener(egret.TouchEvent.TOUCH_TAP,this.onTabOutSideClose,this);
+        onCreate() {
+            this.mask.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onTabOutSideClose, this);
             this.onResize();
         }
-        onDestroy(){
+        onDestroy() {
             super.destroy();
-            this.mask.removeEventListener(egret.TouchEvent.TOUCH_TAP,this.onTabOutSideClose,this);
+            this.mask.removeEventListener(egret.TouchEvent.TOUCH_TAP, this.onTabOutSideClose, this);
         }
         onResize() {
             let width = director.instance.rootLayer.width;
@@ -60,15 +60,15 @@ namespace cui {
             this._removeViewList.push(view);
         }
 
-        getLayerViewList(layer){
+        getLayerViewList(layer) {
             this.viewList[layer] = this.viewList[layer] || [];
             return this.viewList[layer];
         }
 
         onUpdateView() {
-            for(let layer in this.viewList){
+            for (let layer in this.viewList) {
                 let viewList = this.viewList[layer];
-                for(let i = 0,len = viewList.length;i<len;i++){
+                for (let i = 0, len = viewList.length; i < len; i++) {
                     let view = viewList[i];
                     view.onUpdate()
                 }
@@ -107,26 +107,27 @@ namespace cui {
             this.maskView = null;
             for (let len = children.length; len > 0; len--) {
                 let view = <View>children[len - 1];
-                if(view.viewConfig.mask){
-                    maskIndex = len -1;
+                if (view.viewConfig.mask) {
+                    maskIndex = len - 1;
                     this.maskView = view;
                 }
             }
             for (let len = children.length; len > 0; len--) {
                 let view = <View>children[len - 1];
-                if(!view.viewConfig.fixed){
+                if (!view.viewConfig.fixed) {
                     this.topView = view;
+                    break;
                 }
             }
-            if(maskIndex > -1){
-                this.display.addChildAt(this.mask,maskIndex);
+            if (maskIndex > -1) {
+                this.display.addChildAt(this.mask, maskIndex);
             }
         }
 
         onUpdate() {
             this.container.onUpdate();
             this.onUpdateView();
-            
+
         }
         compareChildren(a: View, b: View) {
             if (a.layer == b.layer) {
@@ -135,9 +136,18 @@ namespace cui {
             return a.layer - b.layer;
         }
 
-        onTabOutSideClose(){
-            if(this.topView == this.maskView && this.maskView.viewConfig.tabOutSideClose){
+        onTabOutSideClose() {
+            if (this.topView == this.maskView && this.maskView.viewConfig.tabOutSideClose) {
                 this.popView(this.topView);
+            }
+        }
+        get topView(): View {
+            return this._topView;
+        }
+        set topView(view: View) {
+            if (this._topView != view) {
+                this._topView = view;
+                this.topViewName = this._topView['__class__'];
             }
         }
     }

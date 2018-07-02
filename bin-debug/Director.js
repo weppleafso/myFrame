@@ -7,7 +7,6 @@ var director;
         function Director() {
         }
         Director.prototype.init = function (root) {
-            var _this = this;
             this.dispose();
             this._root = root;
             this._stage = root.stage;
@@ -23,25 +22,6 @@ var director;
             this._root.addChild(this.topLayer);
             this._onResize();
             this.lastTick = egret.getTimer();
-            clib.sound = new clib.SoundManager(false);
-            clib.sound.init();
-            clib.netWork = new clib.NetWork();
-            clib.netWork.connect("127.0.0.1", 4010, function (success) {
-                console.log(success);
-                clib.netWork.request("gate.gateHandler.queryEntry", { uid: 111 }, function (res) {
-                    console.log(res);
-                    if (res.code == 0) {
-                        clib.netWork.disconnect();
-                        clib.netWork.connect(res.host, 3010, function (success) {
-                            if (success) {
-                                console.log("aaaa", success);
-                                clib.netWork.request("connector.entryHandler.entry", { nickName: "haha", rid: 1 }, function (res) {
-                                });
-                            }
-                        }, _this);
-                    }
-                });
-            }, this);
             // clib.netWork.connect("127.0.0.1", 3010, (success: boolean) => {
             //     if (success) {
             //         console.log("aaaa", success);
