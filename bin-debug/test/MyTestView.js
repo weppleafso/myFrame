@@ -27,6 +27,10 @@ var ctest;
             _super.prototype.createChildren.call(this);
         };
         MyTestView.prototype.onChangeMusic = function () {
+            var renderTextrue = new egret.RenderTexture();
+            renderTextrue.drawToTexture(this.imgBg);
+            renderTextrue.toDataURL("image/png");
+            return;
             var list = ["homepage_bgm_mp3", "comic_bgm_mp3"];
             var i = Math.floor(Math.random() * list.length);
             var res = list[i];

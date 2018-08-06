@@ -22,6 +22,7 @@ var director;
             this._root.addChild(this.topLayer);
             this._onResize();
             this.lastTick = egret.getTimer();
+            clib.sound = new clib.SoundManager(false);
             // clib.netWork.connect("127.0.0.1", 3010, (success: boolean) => {
             //     if (success) {
             //         console.log("aaaa", success);

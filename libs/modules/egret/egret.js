@@ -24163,9 +24163,15 @@ var egret;
             }
         };
         BitmapData.prototype.$dispose = function () {
-            if (egret.Capabilities.runtimeType == egret.RuntimeType.WEB && egret.Capabilities.renderMode == "webgl" && this.webGLTexture) {
-                egret.WebGLUtils.deleteWebGLTexture(this.webGLTexture);
-                this.webGLTexture = null;
+            if (egret.Capabilities.runtimeType == egret.RuntimeType.WEB && egret.Capabilities.renderMode == "webgl") {
+                if (this.webGLTexture) {
+                    egret.WebGLUtils.deleteWebGLTexture(this.webGLTexture);
+                    this.webGLTexture = null;
+                }
+                if (this.source && this.source.texture) {
+                    egret.WebGLUtils.deleteWebGLTexture(this.source.texture);
+                    this.source.texture = null;
+                }
             }
             //native
             if (this.source && this.source.dispose) {

@@ -2,6 +2,7 @@
 <e:Skin class="MyTestView" width="640" height="1136" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing">
 	<e:Rect left="0" right="0" top="0" bottom="0" visible="false"/>
 	<e:Group id="gpMap" left="0" right="0" top="0" bottom="0">
+		<e:Image id="imgBg" source="bg_jpg" x="182" y="38"/>
 	</e:Group>
 	<e:Button id="btnMusic" label="切换背景音乐" x="34" y="30"/>
 	<e:Button id="btnEffect" label="播放音效1" x="31" y="94"/>

@@ -7,6 +7,7 @@ namespace ctest{
         pathFinder:battle.PathFinder;
         btnMusic:eui.Button;
         btnEffect:eui.Button;
+        imgBg:eui.Image;
         constructor(){
             super({
                 layer:cui.layer.base,
@@ -19,6 +20,10 @@ namespace ctest{
             
         }
         onChangeMusic(){
+            let renderTextrue = new egret.RenderTexture();
+            renderTextrue.drawToTexture(this.imgBg);
+            renderTextrue.toDataURL("image/png");
+            return ;
             let list = ["homepage_bgm_mp3","comic_bgm_mp3"];
             let i = Math.floor(Math.random() * list.length);
             let res = list[i];

@@ -27,6 +27,7 @@
 		"bin-debug/lib/Armtrue.js",
 		"bin-debug/lib/cache.js",
 		"bin-debug/lib/CallBackList.js",
+		"bin-debug/lib/FrameImage.js",
 		"bin-debug/lib/GlobalEvent.js",
 		"bin-debug/Config.js",
 		"bin-debug/lib/MyParticle.js",
