@@ -55,6 +55,12 @@ namespace ctest{
             // clib.useCache(battle.TestActor,function(obj:battle.TestActor,a:number){
             //     console.log(a);
             // })
+            var par = new particle.GravityParticleSystem(RES.getRes("newParticle_png"),RES.getRes("newParticle_json"));
+			par.start();
+			this.addChild(par);
+            // par.changeTexture(RES.getRes("treeParticle_png"))
+			par.x = director.instance.width/2;
+			par.y = director.instance.height/2;
         }
         onDestroy(){
 

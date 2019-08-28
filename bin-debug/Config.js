@@ -5,4 +5,3 @@ var config = {
     GAME_CONTENT_WIDTH: 640,
     GAME_CONTENT_HEIGHT: 1136
 };
-//# sourceMappingURL=Config.js.map

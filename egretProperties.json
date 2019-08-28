@@ -7,7 +7,7 @@
     "native": 1,
     "path": "bin-release"
   },
-  "egret_version": "5.0.13",
+  "egret_version": "5.1.11",
   "template": {},
   "eui": {
     "exmlRoot": [
@@ -46,11 +46,20 @@
       "path": "./promise"
     },
     {
-      "name":"dragonBones"
+      "name": "dragonBones"
     },
     {
-      "name":"particle",
-      "path":"./particle"
+      "name": "particle",
+      "path": "./particle"
     }
-  ]
+  ],
+  "targets": {
+    "android": {
+      "appname": "codearena",
+      "packagename": "com.codemao.codearena"
+    }
+  },
+  "target": {
+    "current": "web"
+  }
 }

@@ -58,4 +58,3 @@ var cval;
     cval.Entity = Entity;
     __reflect(Entity.prototype, "cval.Entity");
 })(cval || (cval = {}));
-//# sourceMappingURL=Entity.js.map
